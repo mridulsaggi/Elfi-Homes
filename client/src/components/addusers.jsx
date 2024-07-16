@@ -16,7 +16,12 @@ const Adduser = () => {
             },
             withCredentials: true,
           })
-        alert(data.error);
+        alert("Added successfully :)");
+        setemail("")
+        setname("")
+        setmessage("")
+        setstatus("")
+        setdescription("")
     }
 
     return (
