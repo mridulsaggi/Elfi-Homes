@@ -10,7 +10,7 @@ const Hero = () => {
                         <p className="py-6">
                         We are EL-FI Homes, SoCal's premier home electrification company.
                         </p>
-                        <Link to="/addlead"><button className="btn btn-primary">Get Started</button>ue</Link>
+                        <Link to="/addlead"><button className="btn btn-primary">Get Started</button></Link>
                     </div>
                     <img 
                         // src="./crm.jpeg"

@@ -1,19 +1,25 @@
 import React, { useState } from 'react'
 import axios from "axios"
+import toast from 'react-hot-toast';
 const Login = () => {
     const [email,setemail]=useState("");
     const [password,setpassword]=useState("");
     const submithandler=async(e)=>{
         e.preventDefault();
-        const {data}=await axios.post("http://www.localhost:5000/login",{
-            email, password,
-          }, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          })
-        alert(data.error);
+        try {
+            const {data}=await axios.post("http://www.localhost:5000/login",{
+                email, password,
+              }, {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                withCredentials: true,
+              })
+            toast.success(data.message);
+            
+        } catch (error) {
+            toast.error(error.response.data.error);
+        }
     }
 
     return (

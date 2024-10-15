@@ -17,7 +17,7 @@ const signup = async (req, res) => {
         res.status(200).json({message:"User registered successfully"})
     }
     else {
-        res.send({ error: "user already exists with this emailId" })
+        res.status(500).send({ error: "user already exists with this emailId" })
     }
 
 }

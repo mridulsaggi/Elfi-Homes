@@ -1,20 +1,28 @@
 import React, { useState } from 'react'
 import axios from "axios"
+import toast from 'react-hot-toast';
 const Signup = () => {
     const [name,setname]=useState("");
     const [email,setemail]=useState("");
     const [password,setpassword]=useState("");
     const submithandler=async(e)=>{
         e.preventDefault();
-        const {data}=await axios.post("http://www.localhost:5000/signup",{
-            name,email, password,
-          }, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          })
-        alert(data.error);
+        try {
+            const {data}=await axios.post("http://www.localhost:5000/signup",{
+                name,email, password,
+              }, {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                withCredentials: true,
+              })
+            //   console.log(data);
+              toast.success(data.message);
+        } catch (error) {
+            // console.log(error.response.data.error);
+            toast.error(error.response.data.error);
+
+        }
     }
 
     return (
@@ -31,7 +39,7 @@ const Signup = () => {
                     <path
                         d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
                 </svg>
-                <input type="text" className="grow" placeholder="text" value={name} onChange={(e)=>setname(e.target.value)} />
+                <input type="text" className="grow" placeholder="name" value={name} onChange={(e)=>setname(e.target.value)} />
             </label>
             <label className="input input-bordered flex items-center my-[1rem]">
                 <svg

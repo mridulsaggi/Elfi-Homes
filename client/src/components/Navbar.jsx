@@ -45,7 +45,7 @@ const Navbar = () => {
             </div>
                 <div className="navbar-end absolute right-[8rem]">
                     <Link to="/login" className="btn btn-primary text-white font-bold w-[7rem] mx-2">Login</Link>
-                    <Link to="/login" className="btn btn-primary text-white font-bold w-[7rem] mx-2">Signup</Link>
+                    <Link to="/signup" className="btn btn-primary text-white font-bold w-[7rem] mx-2">Signup</Link>
                 </div>
             
             <div className="flex-none navbar-end">

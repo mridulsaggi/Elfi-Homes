@@ -17,11 +17,11 @@ const login=async(req,res)=>{
             res.status(200).json({message:"User logedin successfully"})
         }
         else{
-            res.send({error:"Invalid password"})
+            res.status(500).send({error:"Invalid password"})
         }
     }
     else{
-        res.send({error:"no user exists with this emailId"})
+        res.status(500).send({error:"no user exists with this emailId"})
     }
 
 }
