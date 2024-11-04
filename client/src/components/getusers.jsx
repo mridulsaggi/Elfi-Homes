@@ -1,145 +1,106 @@
 import axios from 'axios'
-import React, { useState } from 'react'
-import { useEffect } from 'react';
-import DonutChart from 'react-donut-chart';
+import React, { useState, useEffect } from 'react'
 import { toast } from "react-hot-toast"
-import Bchart from './chart';
+
 const Allusers = () => {
-    const [users, setusers] = useState([]);
-    const [category, setcategory] = useState("all");
-    const [delete_lead, setdelete_lead] = useState();
-    const [loading, setloading] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [category, setCategory] = useState("all");
+    const [loading, setLoading] = useState(false);
     const [loadingCard, setLoadingCard] = useState(null); // Track loading card by its ID
-    // const allcategories = ['all', 'initial', 'contact', 'future', 'complete'];
+
     const categories = async () => {
-        // console.log(category)
         const { data } = await axios.post("http://www.localhost:5000/category", {
             category
         }, {
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             withCredentials: true,
-        })
-        // console.log(data)
-        setusers(data)
+        });
+        setUsers(data);
     }
+
     useEffect(() => {
         categories();
-    }, [category])
+    }, [category]);
 
-    const sendemail = async (name, email, id) => {
-        setLoadingCard(id); // Set the loading card ID
-        setloading(true);
+    const sendEmail = async (name, email, id) => {
+        setLoadingCard(id);
+        setLoading(true);
         try {
             const { data } = await axios.post("https://el-fi-automation.onrender.com/send-email", {
                 name, receiver_email: email, response: "Yes"
             }, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                // withCredentials: true, giving cors error for ai api
-            })
-            console.log(data);
-            setloading(false);
-            toast.success("email sent successfully :)")
-
+                headers: { "Content-Type": "application/json" },
+            });
+            toast.success("Email sent successfully :)");
         } catch (error) {
-            setloading(false);
-            console.log(error)
-            console.log(error.response.data.detail);
-            toast.error(error.response.data.detail)
+            toast.error("Failed to send email");
         } finally {
-            setLoadingCard(null); // Reset loading card ID after email is sent
+            setLoading(false);
+            setLoadingCard(null);
         }
-
-
-
     }
-    // useEffect(() => {
-    //     deletelead();
-    // }, [setdelete_lead])
 
-    // const deletelead=async(e)=>{
-    //     e.preventDefault();
-    //     const leadid=delete_lead;
-    //     console.log(leadid)
-    //     const {data}=await axios.post("http://www.localhost:5000/deletelead",{
-    //         leadid
-    //       }, {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         withCredentials: true,
-    //       })
-    //       console.log(data);
-    // }
+    const deleteUser = async (id) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this user?");
+        if (!isConfirmed) return; // If user cancels, exit the function
+
+        try {
+            await axios.post("http://www.localhost:5000/deletelead", { leadid: id }, {
+                headers: { "Content-Type": "application/json" },
+                withCredentials: true,
+            });
+            setUsers(users.filter((user) => user._id !== id));
+            toast.success("User deleted successfully");
+        } catch (error) {
+            toast.error("Failed to delete user");
+        }
+    };
 
     return (
         <div>
-            {/* <DonutChart
-                data={[
-                    {
-                        label: 'Contact',
-                        value: 25,
-                    },
-                    {
-                        label: 'Initial',
-                        value:10,
-                    },
-                    {
-                        label: 'Future',
-                        value: 35,
-                    },
-                    {
-                        label: 'Complete',
-                        value: 30,
-                        // isEmpty: true,
-                    },
-                ]}
-            /> */}
-            <div className='flex w-[100%] items-center justify-around text-2xl my-3'>
-                <div className='bg-slate-400 w-[10rem] text-center rounded-md text-white' onClick={(e) => { setcategory(e.target.innerHTML.toLowerCase()) }}>All</div>
-                <div className='bg-slate-400 w-[10rem] text-center rounded-md text-white' onClick={(e) => { setcategory(e.target.innerHTML.toLowerCase()) }}>Initial</div>
-                <div className='bg-slate-400 w-[10rem] text-center rounded-md text-white' onClick={(e) => { setcategory(e.target.innerHTML.toLowerCase()) }}>Contact</div>
-                <div className='bg-slate-400 w-[10rem] text-center rounded-md text-white' onClick={(e) => { setcategory(e.target.innerHTML.toLowerCase()) }}>Future</div>
-                <div className='bg-slate-400 w-[10rem] text-center rounded-md text-white' onClick={(e) => { setcategory(e.target.innerHTML.toLowerCase()) }}>Complete</div>
+            <div className='flex w-full items-center justify-around text-2xl my-3'>
+                {['All', 'Initial', 'Contact', 'Future', 'Complete'].map((cat) => (
+                    <div key={cat} className='bg-slate-400 w-40 text-center rounded-md text-white cursor-pointer'
+                        onClick={() => setCategory(cat.toLowerCase())}>
+                        {cat}
+                    </div>
+                ))}
             </div>
-            <div className='w-[70%] mx-auto mt-[5rem] flex'>
-                <Bchart />
-            </div>
-            {
-                users?.length == 0 ? <div className='min-h-screen text-3xl font-bold text-center my-[4rem]'>No Lead found with this status</div> :
-                    <div className="main grid grid-cols-3 gap-[3rem] w-[90%] mx-auto my-[4rem]">
-                        {users?.map((e) => (
-                            // <div className="card" onClick={()=>{setdelete_lead(e._id)}}>
-                            <div className="card" >
-                                <div className="card bg-base-100 shadow-xl">
-                                    <div className="card-body">
-                                        <h2 className="card-title">{e.name}</h2>
-                                        <h6>{e.email}</h6>
-                                        <h6>{e.status}</h6>
-                                        <h6>{e.description}</h6>
-                                        <p>{e.message}</p>
-                                        <div className="card-actions justify-end">
-                                            <button className="btn btn-primary">Contact</button>
-                                            <button className="btn btn-primary" onClick={() => sendemail(e.name, e.email, e._id)} disabled={loadingCard === e._id}>
-                                                {loadingCard === e._id ? (
-                                                    <span class="loading loading-dots loading-sm"></span>
-                                                ) : (
-                                                    'Send Email')
-                                                }
-                                            </button>
-
-                                        </div>
-                                    </div>
+            {users.length === 0 ? (
+                <div className='min-h-screen text-3xl font-bold text-center my-20'>No Lead found with this status</div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-11/12 mx-auto my-16">
+                    {users.map((user) => (
+                        <div key={user._id} className="bg-white shadow-lg rounded-lg p-6">
+                            <div className="card-body">
+                                <h2 className="card-title text-2xl font-bold mb-2">{user.name}</h2>
+                                <div className="text-gray-700">
+                                    <p><strong>Email:</strong> {user.email}</p>
+                                    <p><strong>Status:</strong> <span className="text-blue-600">{user.status}</span></p>
+                                    <p><strong>Phone:</strong> {user.phoneNumber}</p>
+                                    <p><strong>Bill Number:</strong> {user.BillNumber}</p>
+                                    <p><strong>Address:</strong> {user.address}</p>
+                                    <p><strong>Additional Info:</strong> {user.additionalInfo || "N/A"}</p>
+                                </div>
+                                <div className="card-actions mt-4 flex justify-end space-x-3">
+                                    <button className="btn btn-danger" onClick={() => deleteUser(user._id)}>Delete User</button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => sendEmail(user.name, user.email, user._id)}
+                                        disabled={loadingCard === user._id}
+                                    >
+                                        {loadingCard === user._id ? (
+                                            <span className="loading loading-dots loading-sm"></span>
+                                        ) : 'Send Email'}
+                                    </button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-            }
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }
 
-export default Allusers
+export default Allusers;

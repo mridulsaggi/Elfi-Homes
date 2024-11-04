@@ -11,6 +11,7 @@ import Stats from './components/stats';
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom"
 import * as React from 'react';
 import DataGridDemo from './dashboard/status';
+import ExtractData from './components/ExtractData';
 export default function App() {
   return (
     <Router>
@@ -21,6 +22,7 @@ export default function App() {
         <Route path='/login' element={<Login/>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/addlead' element={<Adduser/>}/>
+        <Route path='/extractdata' element={<ExtractData/>}/>
         <Route path='/gettheleads' element={<Allusers/>}/>
         <Route path='/dashboard' element={<DataGridDemo/>}/>
       </Routes>

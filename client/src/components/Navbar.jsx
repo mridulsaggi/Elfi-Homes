@@ -26,6 +26,7 @@ const Navbar = () => {
                         <li><Link to="/">Home</Link></li>
                     <li><Link to="/dashboard">Dashboard</Link></li>
                     <li><Link to="/gettheleads">Leads</Link></li>
+                    <li><Link to="/extractdata">Extract</Link></li>
                     <li><Link to="/addlead">AddLead</Link></li>
                     <li><Link to="/addlead">Contact</Link></li>
                     </ul>
@@ -37,6 +38,7 @@ const Navbar = () => {
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/dashboard">Dashboard</Link></li>
                     <li><Link to="/gettheleads">Leads</Link></li>
+                    <li><Link to="/extractdata">Extract</Link></li>
                     <li><Link to="/addlead">AddLead</Link></li>
                     <li><Link to="/addlead">Contact</Link></li>
                     

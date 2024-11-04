@@ -3,10 +3,15 @@ import { connection } from "./database/utils/connection.js";
 import userauthroute from "./database/routes/userauthroute.js";
 import customerroute from "./database/routes/customerroutes.js";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const app=express();
 
 app.use(express.urlencoded({extended:true})); //middleware to extract body content
 app.use(express.json());
+
 app.use(cors({
     origin:"http://localhost:5173",
     methods:["GET","PUT","POST","DELETE"],
